@@ -2,7 +2,7 @@
   "name": "reporter-link-backend",
   "version": "0.0.1",
   "description": "API provider of journalists, news organisations and articles.",
-  "main": "index.js",
+  "main": "dist/index.js",
   "author": "Moop204",
   "license": "MIT",
   "dependencies": {
