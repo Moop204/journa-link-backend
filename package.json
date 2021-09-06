@@ -11,8 +11,7 @@
   },
   "scripts": {
     "start": "ts-node ./index.js",
-    "dev-start": "ts-node ./index.ts",
-    "postinstall": "tsc index.ts",
+    "postinstall": "tsc",
     "build": "tsc",
     "watch-node": "nodemon dist/index.js",
     "watch-ts": "tsc -w",
