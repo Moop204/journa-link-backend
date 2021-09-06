@@ -12,4 +12,4 @@ app.get("/", (req: any, res: any) => {
   res.status(200).json({ base: "other" });
 });
 
-app.listen(3000, () => console.log("server started"));
+app.listen(port, () => console.log("server started"));
