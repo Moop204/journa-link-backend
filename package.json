@@ -13,7 +13,7 @@
     "start": "ts-node ./index.js",
     "dev-start": "ts-node ./index.ts",
     "postinstall": "tsc index.ts",
-    "build": "tsc index.ts",
+    "build": "tsc",
     "watch-node": "nodemon dist/index.js",
     "watch-ts": "tsc -w",
     "deploy": "git add . && git commit -m Heroku && git push heroku master"
