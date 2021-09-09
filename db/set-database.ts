@@ -1,4 +1,4 @@
-import { Sequelize, Op, DataTypes } from "sequelize";
+import { Sequelize, Op, DataTypes, Model } from "sequelize";
 import { obtainDataStructure } from "./process-scraped";
 
 const dotenv = require("dotenv");
@@ -123,23 +123,38 @@ const WorkFor = sequelize.define(
 // // test();
 
 const query = async () => {
-  console.log(
-    await (await sequelize.models.Reporter.findOne()).getDataValue("work")
-  );
+  // See what a record of a Reporter is
+  // console.log(
+  //   await (await sequelize.models.Reporter.findOne()).getDataValue("work")
+  // );
 };
 
-query();
+// query();
 
 const simpleInsert = async () => {
   const data = obtainDataStructure();
 
-  await sequelize.sync({ force: true });
-  await sequelize.models.Publisher.create({
-    name: "nytimes",
-    link: "nytimes.com",
+  // Hard reset of everything mentioned
+  // await sequelize.sync({ force: true });
+
+  const publishers = [{ name: "nytimes", link: "nytimes.com" }];
+  const publisherRecords = await sequelize.models.Publisher.findAll({
+    attributes: ["name", "link", "id"],
+  });
+  const publisherCache: { [index: string]: number } = {};
+  const existingPublishers = publisherRecords.map((record) => {
+    publisherCache[record.getDataValue("link")] = record.getDataValue("id");
+    return record.getDataValue("name");
   });
 
-  const publisherCache: { [index: string]: number } = {};
+  publishers.forEach(async (pub) => {
+    if (!existingPublishers.find((ePub) => ePub === pub.name)) {
+      const addedPublisher = await sequelize.models.Publisher.create(pub);
+      publisherCache[addedPublisher.getDataValue("name")] =
+        addedPublisher.getDataValue("id");
+    }
+  });
+  console.log(publisherCache);
 
   Object.entries(data).forEach(async ([author, profile]) => {
     const articlesWritten = Object.values(profile).reduce(
@@ -147,11 +162,21 @@ const simpleInsert = async () => {
         articles.concat(curArticles);
       }
     );
-    const reporter = await sequelize.models.Reporter.create({
-      name: author,
-      work: articlesWritten,
+
+    const checkAuthor = await sequelize.models.Reporter.findOne({
+      where: {
+        name: author,
+      },
     });
-    const reporterId = reporter.getDataValue("id");
+    let reporter: Model<any, any>;
+    if (checkAuthor === null) {
+      reporter = await sequelize.models.Reporter.create({
+        name: author,
+        work: articlesWritten,
+      });
+    } else {
+      reporter = checkAuthor;
+    }
 
     Object.entries(profile).forEach(async ([publisher, articles]) => {
       if (!publisherCache[publisher]) {
@@ -162,16 +187,13 @@ const simpleInsert = async () => {
         });
         publisherCache[publisher] = publisherRecord.getDataValue("id");
       }
+
       await sequelize.models.WorkFor.create({
-        reporter: reporterId,
+        reporter: reporter.getDataValue("id"),
         publisher: publisherCache[publisher],
       });
     });
   });
-
-  // await sequelize.models.Reporter.create({ name: "another name" });
-  // const users = await sequelize.models.Reporter.findAll();
-  // console.log(users);
 };
 
-// simpleInsert();
+simpleInsert();

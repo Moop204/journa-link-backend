@@ -10,7 +10,6 @@ const aggregateFiles = () => {
   const res: JSON[] = [];
   const files = fs.readdirSync(directoryPath);
 
-  console.log("\nCurrent directory filenames:");
   files.forEach((file) => {
     if (file.match(/.*\.json/)) {
       const str = fs.readFileSync(directoryPath + "/" + file, "utf8");
