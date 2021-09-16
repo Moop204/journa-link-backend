@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
+import { Model, Op } from "sequelize";
 import { db } from "./databaseClient";
 
 // Uses Heroku defined port number or else 3000
@@ -58,6 +59,42 @@ app.get("/all-publisher", async (req: any, res: any) => {
       link: publisher.getDataValue("link"),
     };
   });
+  res.status(200).json(response);
+});
+
+app.get("/publisher", async (req: any, res: any) => {
+  const id = req.query["id"];
+  const name = req.query["name"];
+
+  let searchResult: Model<any, any>[];
+
+  if (id) {
+    searchResult = [
+      await db.models.Publisher.findOne({
+        where: {
+          id: id,
+        },
+      }),
+    ];
+  } else if (name) {
+    searchResult = await db.models.Publisher.findAll({
+      where: {
+        name: {
+          [Op.substring]: name,
+        },
+      },
+    });
+  }
+
+  const response: { [id: string]: { name: string; link: string } } = {};
+  searchResult.forEach((publisher) => {
+    const id = publisher.getDataValue("id");
+    response[id] = {
+      name: publisher.getDataValue("name"),
+      link: publisher.getDataValue("link"),
+    };
+  });
+
   res.status(200).json(response);
 });
 
