@@ -8,7 +8,10 @@
   "dependencies": {
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "fs": "^0.0.1-security",
     "pg": "^8.7.1",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.6.5",
     "typescript": "^4.4.2"
   },
   "scripts": {
@@ -17,7 +20,7 @@
     "build": "tsc",
     "watch-node": "nodemon dist/index.js",
     "watch-ts": "tsc -w",
-    "deploy": "git add . && git commit -m Heroku && git push heroku master"
+    "deploy": "git add . && git commit -m Heroku && git push heroku main"
   },
   "engines": {
     "node": "12.18.1"

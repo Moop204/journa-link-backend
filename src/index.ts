@@ -18,8 +18,6 @@ const client = new Client({
 client.connect();
 
 app.get("/api", (req: any, res: any) => {
-  let query = "a";
-  let resObjectt = {};
   client.query(
     "SELECT * FROM information_schema.schemata;",
     (err: any, query: any) => {
