@@ -120,14 +120,14 @@ app.get("/journalist", async (req: any, res: any) => {
 
   if (id) {
     searchResult = [
-      await db.models.Journalist.findOne({
+      await db.models.Reporter.findOne({
         where: {
           id: id,
         },
       }),
     ];
   } else if (name) {
-    searchResult = await db.models.Journalist.findAll({
+    searchResult = await db.models.Reporter.findAll({
       where: {
         name: {
           [Op.substring]: name,
