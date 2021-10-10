@@ -64,8 +64,8 @@ app.get("/all-publisher", async (req: any, res: any) => {
 
 app.get("/all-journalist", async (req: any, res: any) => {
   const allJournalists = await db.models.Reporter.findAll();
-  const response: {[id: string ]: {name: string; work: any}} = {};
-  allJournalists.forEach(journalist => {
+  const response: { [id: string]: { name: string; work: any } } = {};
+  allJournalists.forEach((journalist) => {
     const id = journalist.getDataValue("id");
     response[id] = {
       name: journalist.getDataValue("name"),
@@ -111,10 +111,9 @@ app.get("/publisher", async (req: any, res: any) => {
   res.status(200).json(response);
 });
 
-
 app.get("/journalist", async (req: any, res: any) => {
   const id = req.query["id"];
-  const name = req.query["name"];
+  const name: string = req.query["name"];
 
   let searchResult: Model<any, any>[];
 
@@ -127,25 +126,25 @@ app.get("/journalist", async (req: any, res: any) => {
       }),
     ];
   } else if (name) {
+    name.replace("_", " ");
     searchResult = await db.models.Reporter.findAll({
       where: {
         name: {
-          [Op.substring]: name,
+          [Op.iLike]: name + "%",
         },
       },
     });
   }
-  const response: { [id: string]: {name: string; work: any}} = {};
-  searchResult.forEach(journalist => {
+  const response: { [id: string]: { name: string; work: any } } = {};
+  searchResult.forEach((journalist) => {
     const id = journalist.getDataValue("id");
     response[id] = {
       name: journalist.getDataValue("name"),
       work: journalist.getDataValue("work"),
     };
   });
-  res.status(200).json(response)
+  res.status(200).json(response);
 });
-
 
 app.get("/", (req: any, res: any) => {
   res.status(200).json({ base: "other" });
