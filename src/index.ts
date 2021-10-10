@@ -5,6 +5,9 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
+import { Model, Op } from "sequelize";
+import { db } from "./databaseClient";
+
 // Uses Heroku defined port number or else 3000
 const port = process.env.PORT || 3000;
 
@@ -44,6 +47,55 @@ app.get("/testy", (req: any, res: any) => {
     //   resObjectt["api"] = JSON.stringify(row);
     // }
   });
+});
+
+app.get("/all-publisher", async (req: any, res: any) => {
+  const allPublishers = await db.models.Publisher.findAll();
+  const response: { [id: string]: { name: string; link: string } } = {};
+  allPublishers.forEach((publisher) => {
+    const id = publisher.getDataValue("id");
+    response[id] = {
+      name: publisher.getDataValue("name"),
+      link: publisher.getDataValue("link"),
+    };
+  });
+  res.status(200).json(response);
+});
+
+app.get("/publisher", async (req: any, res: any) => {
+  const id = req.query["id"];
+  const name = req.query["name"];
+
+  let searchResult: Model<any, any>[];
+
+  if (id) {
+    searchResult = [
+      await db.models.Publisher.findOne({
+        where: {
+          id: id,
+        },
+      }),
+    ];
+  } else if (name) {
+    searchResult = await db.models.Publisher.findAll({
+      where: {
+        name: {
+          [Op.substring]: name,
+        },
+      },
+    });
+  }
+
+  const response: { [id: string]: { name: string; link: string } } = {};
+  searchResult.forEach((publisher) => {
+    const id = publisher.getDataValue("id");
+    response[id] = {
+      name: publisher.getDataValue("name"),
+      link: publisher.getDataValue("link"),
+    };
+  });
+
+  res.status(200).json(response);
 });
 
 app.get("/", (req: any, res: any) => {
