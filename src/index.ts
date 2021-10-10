@@ -90,10 +90,13 @@ app.get("/publisher", async (req: any, res: any) => {
       }),
     ];
   } else if (name) {
+    let trimmedName = name.replace("_", " ");
+    trimmedName = trimmedName.replace(/[^a-zA-Z. ]*/g, "");
+
     searchResult = await db.models.Publisher.findAll({
       where: {
         name: {
-          [Op.substring]: name,
+          [Op.substring]: trimmedName,
         },
       },
     });
@@ -126,11 +129,12 @@ app.get("/journalist", async (req: any, res: any) => {
       }),
     ];
   } else if (name) {
-    name.replace("_", " ");
+    let trimmedName = name.replace("_", " ");
+    trimmedName = trimmedName.replace(/[^a-zA-Z. ]*/g, "");
     searchResult = await db.models.Reporter.findAll({
       where: {
         name: {
-          [Op.iLike]: name + "%",
+          [Op.iLike]: trimmedName + "%",
         },
       },
     });
