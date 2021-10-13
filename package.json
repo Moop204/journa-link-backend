@@ -18,6 +18,7 @@
   },
   "scripts": {
     "start": "ts-node ./src/index.ts",
+    "server-start": "node ./dist/index.js",
     "postinstall": "tsc",
     "build": "tsc",
     "watch-node": "nodemon dist/index.js",
