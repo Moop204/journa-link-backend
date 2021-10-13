@@ -1,0 +1,145 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is the documentation for Journa-link.",
+    "version": "1.0.0",
+    "title": "Journa-link API",
+    "contact": {
+      "email": "z5162792@unsw.edu.au"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://mit-license.org/"
+    }
+  },
+  "host": "tbd",
+  "basePath": "/v2",
+  "tags": [
+    {
+      "name": "actions",
+      "description": "Actions involving the deck"
+    }
+  ],
+  "schemes": ["https", "http"],
+  "paths": {
+    "/publisher": {
+      "get": {
+        "tags": ["publisher"],
+        "summary": "Search for publishers",
+        "description": "Request a single publisher with their id or all matching publishers with their name.",
+        "operationId": "publisher",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Identifying number for a reporter.",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Name of reporter that is being searched for.",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful publisher.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Publisher"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid status value"
+          }
+        }
+      }
+    },
+    "/reporter": {
+      "get": {
+        "tags": ["reporter"],
+        "summary": "Search for reporter.",
+        "description": "Request a single reporter with their id or all matching reporters with their name.",
+        "operationId": "reporter",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Identifying number for a reporter.",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Name of reporter that is being searched for.",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Reporter"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid status value"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Reporter": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of publisher.",
+          "example": "Paul L. Montgomery"
+        },
+        "work": {
+          "type": "JSON",
+          "example": {
+            "nytimes.com": {
+              "title": "nytimes",
+              "link": "nytimes.com"
+            }
+          }
+        }
+      }
+    },
+    "Publisher": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of publisher.",
+          "example": "nytimes"
+        },
+        "link": {
+          "type": "string",
+          "description": "Link to publisher's website.",
+          "example": "nytimes.com"
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}

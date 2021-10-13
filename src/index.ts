@@ -2,6 +2,8 @@ const { Client } = require("pg");
 const express = require("express");
 const app = express();
 const dotenv = require("dotenv");
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./swagger.json");
 
 dotenv.config();
 
@@ -150,8 +152,9 @@ app.get("/journalist", async (req: any, res: any) => {
   res.status(200).json(response);
 });
 
-app.get("/", (req: any, res: any) => {
-  res.status(200).json({ base: "other" });
-});
+app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// app.get("/", (req: any, res: any) => {
+//   res.status(200).json({ base: "other" });
+// });
 
 app.listen(port, () => console.log("server started"));

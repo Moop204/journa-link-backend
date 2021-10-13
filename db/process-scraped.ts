@@ -18,7 +18,6 @@ const aggregateFiles = () => {
       delete instance["description"];
       delete instance["date_download"];
       delete instance["date_modify"];
-      delete instance["date_publish"];
       delete instance["filename"];
       delete instance["maintext"];
       delete instance["language"];
