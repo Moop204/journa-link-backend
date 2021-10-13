@@ -16,8 +16,12 @@
   "basePath": "/v2",
   "tags": [
     {
-      "name": "actions",
-      "description": "Actions involving the deck"
+      "name": "publisher",
+      "description": "Actions querying news organisations"
+    },
+    {
+      "name": "reporter",
+      "description": "Actions querying reporters"
     }
   ],
   "schemes": ["https", "http"],
