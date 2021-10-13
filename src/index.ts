@@ -2,6 +2,8 @@ const { Client } = require("pg");
 const express = require("express");
 const app = express();
 const dotenv = require("dotenv");
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./swagger.json");
 
 dotenv.config();
 
@@ -62,6 +64,19 @@ app.get("/all-publisher", async (req: any, res: any) => {
   res.status(200).json(response);
 });
 
+app.get("/all-journalist", async (req: any, res: any) => {
+  const allJournalists = await db.models.Reporter.findAll();
+  const response: { [id: string]: { name: string; work: any } } = {};
+  allJournalists.forEach((journalist) => {
+    const id = journalist.getDataValue("id");
+    response[id] = {
+      name: journalist.getDataValue("name"),
+      work: journalist.getDataValue("work"),
+    };
+  });
+  res.status(200).json(response);
+});
+
 app.get("/publisher", async (req: any, res: any) => {
   const id = req.query["id"];
   const name = req.query["name"];
@@ -77,10 +92,13 @@ app.get("/publisher", async (req: any, res: any) => {
       }),
     ];
   } else if (name) {
+    let trimmedName = name.replace("_", " ");
+    trimmedName = trimmedName.replace(/[^a-zA-Z. ]*/g, "");
+
     searchResult = await db.models.Publisher.findAll({
       where: {
         name: {
-          [Op.substring]: name,
+          [Op.substring]: trimmedName,
         },
       },
     });
@@ -98,8 +116,45 @@ app.get("/publisher", async (req: any, res: any) => {
   res.status(200).json(response);
 });
 
-app.get("/", (req: any, res: any) => {
-  res.status(200).json({ base: "other" });
+app.get("/journalist", async (req: any, res: any) => {
+  const id = req.query["id"];
+  const name: string = req.query["name"];
+
+  let searchResult: Model<any, any>[];
+
+  if (id) {
+    searchResult = [
+      await db.models.Reporter.findOne({
+        where: {
+          id: id,
+        },
+      }),
+    ];
+  } else if (name) {
+    let trimmedName = name.replace("_", " ");
+    trimmedName = trimmedName.replace(/[^a-zA-Z. ]*/g, "");
+    searchResult = await db.models.Reporter.findAll({
+      where: {
+        name: {
+          [Op.iLike]: trimmedName + "%",
+        },
+      },
+    });
+  }
+  const response: { [id: string]: { name: string; work: any } } = {};
+  searchResult.forEach((journalist) => {
+    const id = journalist.getDataValue("id");
+    response[id] = {
+      name: journalist.getDataValue("name"),
+      work: journalist.getDataValue("work"),
+    };
+  });
+  res.status(200).json(response);
 });
+
+app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// app.get("/", (req: any, res: any) => {
+//   res.status(200).json({ base: "other" });
+// });
 
 app.listen(port, () => console.log("server started"));
