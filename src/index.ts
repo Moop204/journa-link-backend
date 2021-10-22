@@ -141,13 +141,13 @@ app.get("/journalist", async (req: any, res: any) => {
       },
     });
   }
-  const response: { [id: string]: { name: string; work: any } } = {};
+  const response: any[] = [];
   searchResult.forEach((journalist) => {
-    const id = journalist.getDataValue("id");
-    response[id] = {
+    response.push({
+      id: journalist.getDataValue("id"),
       name: journalist.getDataValue("name"),
       work: journalist.getDataValue("work"),
-    };
+    });
   });
   res.status(200).json(response);
 });
