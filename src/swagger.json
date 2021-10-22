@@ -12,8 +12,8 @@
       "url": "https://mit-license.org/"
     }
   },
-  "host": "https://reporter-link-backend.herokuapp.com/",
-  "basePath": "/v2",
+  "host": "reporter-link-backend.herokuapp.com/",
+  "basePath": "",
   "tags": [
     {
       "name": "publisher",
