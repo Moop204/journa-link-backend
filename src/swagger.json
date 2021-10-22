@@ -12,7 +12,7 @@
       "url": "https://mit-license.org/"
     }
   },
-  "host": "tbd",
+  "host": "https://reporter-link-backend.herokuapp.com/",
   "basePath": "/v2",
   "tags": [
     {
