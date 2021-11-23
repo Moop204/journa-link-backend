@@ -4,6 +4,7 @@ const app = express();
 const dotenv = require("dotenv");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
+const cors = require("cors");
 
 dotenv.config();
 
@@ -12,6 +13,8 @@ import { db } from "./databaseClient";
 
 // Uses Heroku defined port number or else 3000
 const port = process.env.PORT || 3000;
+
+app.use(cors());
 
 const client = new Client({
   connectionString: process.env.DATABASE_URL || process.env.CONNECTION_STRING,
@@ -77,7 +80,12 @@ app.get("/all-journalist", async (req: any, res: any) => {
   res.status(200).json(response);
 });
 
-app.get("/publisher", async (req: any, res: any) => {
+app.get("/publisher", cors(), async (req: any, res: any) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
   const id = req.query["id"];
   const name = req.query["name"];
 
@@ -116,9 +124,14 @@ app.get("/publisher", async (req: any, res: any) => {
   res.status(200).json(response);
 });
 
-app.get("/journalist", async (req: any, res: any) => {
+app.get("/journalist", cors(), async (req: any, res: any) => {
   const id = req.query["id"];
   const name: string = req.query["name"];
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
 
   let searchResult: Model<any, any>[];
 
@@ -141,13 +154,13 @@ app.get("/journalist", async (req: any, res: any) => {
       },
     });
   }
-  const response: { [id: string]: { name: string; work: any } } = {};
+  const response: any[] = [];
   searchResult.forEach((journalist) => {
-    const id = journalist.getDataValue("id");
-    response[id] = {
+    response.push({
+      id: journalist.getDataValue("id"),
       name: journalist.getDataValue("name"),
       work: journalist.getDataValue("work"),
-    };
+    });
   });
   res.status(200).json(response);
 });

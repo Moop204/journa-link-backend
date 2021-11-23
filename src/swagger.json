@@ -12,15 +12,15 @@
       "url": "https://mit-license.org/"
     }
   },
-  "host": "tbd",
-  "basePath": "/v2",
+  "host": "reporter-link-backend.herokuapp.com/",
+  "basePath": "",
   "tags": [
     {
       "name": "publisher",
       "description": "Actions querying news organisations"
     },
     {
-      "name": "reporter",
+      "name": "journalist",
       "description": "Actions querying reporters"
     }
   ],
@@ -66,12 +66,12 @@
         }
       }
     },
-    "/reporter": {
+    "/journalist": {
       "get": {
-        "tags": ["reporter"],
+        "tags": ["journalist"],
         "summary": "Search for reporter.",
         "description": "Request a single reporter with their id or all matching reporters with their name.",
-        "operationId": "reporter",
+        "operationId": "journalist",
         "produces": ["application/json"],
         "parameters": [
           {
@@ -95,7 +95,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/Reporter"
+                "$ref": "#/definitions/Journalist"
               }
             }
           },
@@ -107,7 +107,7 @@
     }
   },
   "definitions": {
-    "Reporter": {
+    "Journalist": {
       "type": "object",
       "properties": {
         "name": {

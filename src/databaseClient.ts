@@ -1,5 +1,6 @@
 import { Sequelize, Op, DataTypes, Model } from "sequelize";
 
+console.log(process.env.CONNECTION_STRING);
 const sequelize = new Sequelize(process.env.CONNECTION_STRING, {
   dialectOptions: {
     ssl: {
