@@ -81,6 +81,11 @@ app.get("/all-journalist", async (req: any, res: any) => {
 });
 
 app.get("/publisher", cors(), async (req: any, res: any) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
   const id = req.query["id"];
   const name = req.query["name"];
 
@@ -122,6 +127,11 @@ app.get("/publisher", cors(), async (req: any, res: any) => {
 app.get("/journalist", cors(), async (req: any, res: any) => {
   const id = req.query["id"];
   const name: string = req.query["name"];
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
 
   let searchResult: Model<any, any>[];
 
